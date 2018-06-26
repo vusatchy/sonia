@@ -31,39 +31,49 @@ public class HtmlPageToGameCollector {
         Document document = Jsoup.connect(url).get();
         document.getElementsByTag(T_BODY_TAG).forEach(element1 -> {
             List<String> elements = new ArrayList<>(element1.getElementsByTag(TD_TAG)).stream()
-                .map(Element::text)
-                .filter(el -> !StringUtils.isEmpty(el))
-                .collect(Collectors.toList());
+                    .map(Element::text)
+                    .filter(el -> !StringUtils.isEmpty(el))
+                    .collect(Collectors.toList());
             if (elements.size() == REQUIRED_PARAMS_COUNT) {
                 String pictureHref = getAttributeValue(SRC_ATTRIBUTE, element1);
                 String href = getAttributeValue(HREF_ATTRIBUTE, element1);
                 VideoGame videoGame = new VideoGame();
                 videoGame.setHref(href);
-                videoGame.setPictureHref(pictureHref);
+                videoGame.setImg(pictureHref);
                 videoGame.setName(elements.get(NAME_INDEX));
-                videoGame.setPrice(elements.get(PRICE_INDEX));
+                videoGame.setPrice(parsePrice(elements.get(PRICE_INDEX)));
                 videoGames.add(videoGame);
             }
         });
         return videoGames;
     }
 
-    public static List<VideoGame> validateGames(List<VideoGame> videoGames){
+    public static List<VideoGame> validateGames(List<VideoGame> videoGames) {
         return videoGames.stream().map(HtmlPageToGameCollector::videoGameMapper).collect(Collectors.toList());
     }
 
-    private static VideoGame videoGameMapper(VideoGame videoGame){
-        videoGame.setName(videoGame.getName().replaceAll(PHRASE_TO_DELETE,""));
-        Matcher matcher = PRICE_PATTERN.matcher(videoGame.getPrice());
-        if(matcher.find()){
-            String price = matcher.group();
-            price.replaceAll(" ",".");
-            videoGame.setPrice(price);
-        }
-        else {
-            videoGame.setPrice(null);
-        }
+    private static VideoGame videoGameMapper(VideoGame videoGame) {
+        videoGame.setName(videoGame.getName().replaceAll(PHRASE_TO_DELETE, ""));
         return videoGame;
+    }
+
+    private static Integer parsePrice(String price) {
+        Matcher matcher = PRICE_PATTERN.matcher(price);
+        if (matcher.find()) {
+            String priceParsed = matcher.group();
+            priceParsed = priceParsed.replaceAll(" ", "");
+            return safeIntgerParse(priceParsed);
+        } else {
+            return null;
+        }
+    }
+
+    private static Integer safeIntgerParse(String price) {
+        try {
+            return Integer.valueOf(price);
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     private static String getAttributeValue(String key, Element element) {

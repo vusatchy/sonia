@@ -1,14 +1,35 @@
 package com.example.sonia.sonia.model;
 
+import javax.persistence.*;
+import java.util.Objects;
+
+@Entity
+@Table(name = "game")
 public class VideoGame {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
+
+    @Column(name = "name")
     private String name;
 
-    private String price;
+    @Column(name = "price")
+    private Integer price;
 
+    @Column(name = "href")
     private String href;
 
-    private String pictureHref;
+    @Column(name = "img")
+    private String img;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public String getName() {
         return name;
@@ -18,11 +39,11 @@ public class VideoGame {
         this.name = name;
     }
 
-    public String getPrice() {
+    public Integer getPrice() {
         return price;
     }
 
-    public void setPrice(String price) {
+    public void setPrice(Integer price) {
         this.price = price;
     }
 
@@ -34,54 +55,40 @@ public class VideoGame {
         this.href = href;
     }
 
-    public String getPictureHref() {
-        return pictureHref;
+    public String getImg() {
+        return img;
     }
 
-    public void setPictureHref(String pictureHref) {
-        this.pictureHref = pictureHref;
+    public void setImg(String img) {
+        this.img = img;
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
         VideoGame videoGame = (VideoGame) o;
-
-        if (name != null ? !name.equals(videoGame.name) : videoGame.name != null) {
-            return false;
-        }
-        if (price != null ? !price.equals(videoGame.price) : videoGame.price != null) {
-            return false;
-        }
-        if (href != null ? !href.equals(videoGame.href) : videoGame.href != null) {
-            return false;
-        }
-        return pictureHref != null ? pictureHref.equals(videoGame.pictureHref) : videoGame.pictureHref == null;
+        return id == videoGame.id &&
+                Objects.equals(name, videoGame.name) &&
+                Objects.equals(price, videoGame.price) &&
+                Objects.equals(href, videoGame.href) &&
+                Objects.equals(img, videoGame.img);
     }
 
     @Override
     public int hashCode() {
-        int result = name != null ? name.hashCode() : 0;
-        result = 31 * result + (price != null ? price.hashCode() : 0);
-        result = 31 * result + (href != null ? href.hashCode() : 0);
-        result = 31 * result + (pictureHref != null ? pictureHref.hashCode() : 0);
-        return result;
+
+        return Objects.hash(id, name, price, href, img);
     }
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("VideoGame{");
-        sb.append("name='").append(name).append('\'');
-        sb.append(", price='").append(price).append('\'');
-        sb.append(", href='").append(href).append('\'');
-        sb.append(", pictureHref='").append(pictureHref).append('\'');
-        sb.append('}');
-        return sb.toString();
+        return "VideoGame{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", price=" + price +
+                ", href='" + href + '\'' +
+                ", img='" + img + '\'' +
+                '}';
     }
 }
