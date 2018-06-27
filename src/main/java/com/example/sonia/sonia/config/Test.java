@@ -12,16 +12,4 @@ import java.util.HashSet;
 @Configuration
 public class Test {
 
-    @Autowired
-    private VideoGamesPull videoGamesPull;
-
-    @Autowired
-    private VideoGamesRepository videoGamesRepository;
-
-    // FIXME: remove it to someones post construct @Vusach
-    @Bean
-    public Object object() throws IOException {
-        videoGamesRepository.saveAll(new HashSet<>(videoGamesPull.getAllGames()));
-        return new Object();
-    }
 }

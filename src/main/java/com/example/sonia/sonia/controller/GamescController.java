@@ -22,7 +22,7 @@ public class GamescController {
 
     @GetMapping(value = "/games")
     public String games(Model model, @RequestParam(name = "game", defaultValue = "god of war") String game) {
-        List<VideoGame> games = videoGamesRepository.findByNameContainingIgnoreCase(game);
+        List<VideoGame> games = videoGamesRepository.findByNameContainingIgnoreCaseOrderByPriceAsc(game);
         model.addAttribute("names", names);
         model.addAttribute("games", games);
         return "games";
