@@ -1,5 +1,6 @@
 package com.example.sonia.sonia.service.impl;
 
+import com.example.sonia.sonia.bot.Sonia;
 import com.example.sonia.sonia.model.VideoGame;
 import com.example.sonia.sonia.repository.VideoGamesRepository;
 import com.example.sonia.sonia.service.ScheduledUpdator;
@@ -11,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
+import org.telegram.telegrambots.api.methods.send.SendMessage;
+import org.telegram.telegrambots.exceptions.TelegramApiException;
 
 import java.io.IOException;
 import java.util.HashSet;
@@ -29,8 +32,14 @@ public class ScheduledUpdatorService implements ScheduledUpdator {
     @Autowired
     private VideoGamesRepository videoGamesRepository;
 
+    @Autowired
+    private Sonia sonia;
+
     @Value("${update.period}")
     private Integer period;
+
+    @Value("${chat.id}")
+    private String chatId;
 
     @PostConstruct
     private void init() {
@@ -48,11 +57,39 @@ public class ScheduledUpdatorService implements ScheduledUpdator {
             Set<VideoGame> videoGames = new HashSet<>(videoGamesPull.getAllGames());
             videoGames = extractNewGames(videoGames);
             if (!videoGames.isEmpty()) {
+                updateBot(videoGames);
                 videoGamesRepository.saveAll(videoGames);
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private void updateBot(Set<VideoGame> videoGames) {
+        videoGames.forEach(game -> {
+            SendMessage message = new SendMessage()
+                .setChatId(chatId)
+                .setText(gameToText(game));
+            try {
+                sonia.execute(message);
+            } catch (TelegramApiException e) {
+                e.printStackTrace();
+            }
+        });
+
+    }
+
+    private String gameToText(VideoGame game) {
+        StringBuilder stringBuilder = new StringBuilder()
+            .append("Name: ")
+            .append(game.getName())
+            .append("/n")
+            .append("Price: ")
+            .append(game.getPrice())
+            .append("/n")
+            .append("Href: ")
+            .append(game.getHref());
+        return stringBuilder.toString();
     }
 
     private Set<VideoGame> extractNewGames(Set<VideoGame> videoGames) {
