@@ -5,7 +5,7 @@ import com.example.sonia.sonia.model.VideoGame;
 import java.io.IOException;
 import java.util.List;
 
-public interface VideoGamesPulling {
+public interface VideoGamesPull {
 
-    public List<VideoGame> getAllGames() throws IOException;
+    List<VideoGame> getAllGames() throws IOException;
 }
