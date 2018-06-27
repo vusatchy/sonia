@@ -18,6 +18,7 @@ public class Test {
     @Autowired
     private VideoGamesRepository videoGamesRepository;
 
+    // FIXME: remove it to someones post construct @Vusach
     @Bean
     public Object object() throws IOException {
         videoGamesRepository.saveAll(new HashSet<>(videoGamesPull.getAllGames()));
