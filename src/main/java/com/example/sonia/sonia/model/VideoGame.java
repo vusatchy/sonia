@@ -1,7 +1,12 @@
 package com.example.sonia.sonia.model;
 
-import javax.persistence.*;
 import java.util.Objects;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
 @Entity
 @Table(name = "game")
@@ -65,30 +70,32 @@ public class VideoGame {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         VideoGame videoGame = (VideoGame) o;
-        return id == videoGame.id &&
-                Objects.equals(name, videoGame.name) &&
-                Objects.equals(price, videoGame.price) &&
-                Objects.equals(href, videoGame.href) &&
-                Objects.equals(img, videoGame.img);
+        return Objects.equals(name, videoGame.name) &&
+               Objects.equals(price, videoGame.price) &&
+               Objects.equals(img, videoGame.img);
     }
 
     @Override
     public int hashCode() {
 
-        return Objects.hash(id, name, price, href, img);
+        return Objects.hash(name, price, img);
     }
 
     @Override
     public String toString() {
         return "VideoGame{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", price=" + price +
-                ", href='" + href + '\'' +
-                ", img='" + img + '\'' +
-                '}';
+               "id=" + id +
+               ", name='" + name + '\'' +
+               ", price=" + price +
+               ", href='" + href + '\'' +
+               ", img='" + img + '\'' +
+               '}';
     }
 }

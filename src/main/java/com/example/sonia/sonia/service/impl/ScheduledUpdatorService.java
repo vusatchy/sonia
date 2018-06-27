@@ -59,7 +59,8 @@ public class ScheduledUpdatorService implements ScheduledUpdator {
         Set<VideoGame> videoGamesFromBase = new HashSet<>();
         videoGamesRepository.findAll().forEach(videoGamesFromBase::add);
         videoGames.removeIf(game -> videoGamesFromBase.stream()
-            .anyMatch(bgame -> ObjectUtils.nullSafeEquals(bgame.getHref(), game.getHref())));
+            .anyMatch(bgame -> ObjectUtils.nullSafeEquals(bgame.getName(), game.getName())
+                               && ObjectUtils.nullSafeEquals(bgame.getPrice(), game.getPrice())));
         LOGGER.info("updating with {} games ", videoGames.size());
         return videoGames;
     }
