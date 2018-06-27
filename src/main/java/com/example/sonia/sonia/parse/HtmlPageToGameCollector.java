@@ -62,13 +62,13 @@ public class HtmlPageToGameCollector {
         if (matcher.find()) {
             String priceParsed = matcher.group();
             priceParsed = priceParsed.replaceAll(" ", "");
-            return safeIntgerParse(priceParsed);
+            return safeIntegerParse(priceParsed);
         } else {
             return null;
         }
     }
 
-    private static Integer safeIntgerParse(String price) {
+    private static Integer safeIntegerParse(String price) {
         try {
             return Integer.valueOf(price);
         } catch (Exception e) {
