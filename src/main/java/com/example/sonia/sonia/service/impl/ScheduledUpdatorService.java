@@ -43,21 +43,23 @@ public class ScheduledUpdatorService implements ScheduledUpdator {
 
     @PostConstruct
     private void init() {
-        update();
-        TaskScheduler.schedule(this::update, period, period, TimeUnit.MINUTES);
+        update(true);
+        TaskScheduler.schedule(this::task, period, period, TimeUnit.MINUTES);
     }
 
     @Override
     public Runnable task() {
-        return this::update;
+        return () -> update(false);
     }
 
-    private void update() {
+    private void update(boolean isInitial) {
         try {
             Set<VideoGame> videoGames = new HashSet<>(videoGamesPull.getAllGames());
             videoGames = extractNewGames(videoGames);
             if (!videoGames.isEmpty()) {
-                updateBot(videoGames);
+                if (!isInitial) {
+                    updateBot(videoGames);
+                }
                 videoGamesRepository.saveAll(videoGames);
             }
         } catch (IOException e) {
@@ -83,10 +85,10 @@ public class ScheduledUpdatorService implements ScheduledUpdator {
         StringBuilder stringBuilder = new StringBuilder()
             .append("Name: ")
             .append(game.getName())
-            .append("/n")
+            .append("\n")
             .append("Price: ")
             .append(game.getPrice())
-            .append("/n")
+            .append("\n")
             .append("Href: ")
             .append(game.getHref());
         return stringBuilder.toString();
