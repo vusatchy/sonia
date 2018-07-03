@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface VideoGamesRepository extends CrudRepository<VideoGame, Integer> {
 
-    List<VideoGame> findByNameContainingIgnoreCaseOrderByPriceAsc(String name);
+    List<VideoGame> findByNameContainingIgnoreCaseOrderByPriceDesc(String name);
 }

@@ -5,6 +5,7 @@ import com.example.sonia.sonia.model.VideoGame;
 import com.example.sonia.sonia.repository.VideoGamesRepository;
 import com.example.sonia.sonia.service.ScheduledUpdator;
 import com.example.sonia.sonia.service.VideoGamesPull;
+import com.example.sonia.sonia.util.Convertor;
 import com.example.sonia.sonia.util.TaskScheduler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,9 +48,8 @@ public class ScheduledUpdatorService implements ScheduledUpdator {
         TaskScheduler.schedule(this::task, period, period, TimeUnit.MINUTES);
     }
 
-    @Override
-    public Runnable task() {
-        return () -> update(false);
+    public void task() {
+        update(false);
     }
 
     private void update(boolean isInitial) {
@@ -71,7 +71,7 @@ public class ScheduledUpdatorService implements ScheduledUpdator {
         videoGames.forEach(game -> {
             SendMessage message = new SendMessage()
                 .setChatId(chatId)
-                .setText(gameToText(game));
+                .setText(Convertor.gameToText(game));
             try {
                 sonia.execute(message);
             } catch (TelegramApiException e) {
@@ -81,18 +81,7 @@ public class ScheduledUpdatorService implements ScheduledUpdator {
 
     }
 
-    private String gameToText(VideoGame game) {
-        StringBuilder stringBuilder = new StringBuilder()
-            .append("Name: ")
-            .append(game.getName())
-            .append("\n")
-            .append("Price: ")
-            .append(game.getPrice())
-            .append("\n")
-            .append("Href: ")
-            .append(game.getHref());
-        return stringBuilder.toString();
-    }
+
 
     private Set<VideoGame> extractNewGames(Set<VideoGame> videoGames) {
         Set<VideoGame> videoGamesFromBase = new HashSet<>();
