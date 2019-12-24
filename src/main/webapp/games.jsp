@@ -105,22 +105,22 @@
 <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
 <div class="container">
 	<div class="row">
-        <c:forEach items="${games}" var="game">
+        <c:forEach items="${items}" var="item">
         <div class="col-sm-3">
         	<article class="col-item">
         		<div class="photo">
-        			<a href="#"> <img src="${game.img}"  width="190" height="230" alt="Product Image" /> </a>
+        			<a href="#"> <img src="${item.img}"  width="190" height="230" alt="Product Image" /> </a>
         		</div>
         		<div class="info">
         			<div class="row">
         				<div class="price-details col-md-6">
-        					<h1>${game.name}</h1>
-        					<span class="price-new"><br>${game.price}</span>
+        					<h1>${item.name}</h1>
+        					<span class="price-new"><br>${item.price}</span>
         				</div>
         			</div>
         			<div class="separator clear-left">
         				<p class="btn-add">
-        					<a href="${game.href}" class="hidden-sm">Look at it</a>
+        					<a href="${item.href}" class="hidden-sm">Look at it</a>
         				</p>
         			</div>
         			<div class="clearfix"></div>

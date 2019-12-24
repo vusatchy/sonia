@@ -1,10 +1,10 @@
 package com.example.sonia.sonia.service.impl;
 
 import com.example.sonia.sonia.bot.Sonia;
-import com.example.sonia.sonia.model.VideoGame;
-import com.example.sonia.sonia.repository.VideoGamesRepository;
+import com.example.sonia.sonia.model.Item;
+import com.example.sonia.sonia.repository.ItemsRepository;
 import com.example.sonia.sonia.service.ScheduledUpdator;
-import com.example.sonia.sonia.service.VideoGamesPull;
+import com.example.sonia.sonia.service.ItemsPull;
 import com.example.sonia.sonia.util.Convertor;
 import com.example.sonia.sonia.util.TaskScheduler;
 import org.slf4j.Logger;
@@ -28,10 +28,10 @@ public class ScheduledUpdatorService implements ScheduledUpdator {
     private static final Logger LOGGER = LoggerFactory.getLogger(ScheduledUpdatorService.class);
 
     @Autowired
-    private VideoGamesPull videoGamesPull;
+    private ItemsPull itemsPull;
 
     @Autowired
-    private VideoGamesRepository videoGamesRepository;
+    private ItemsRepository itemsRepository;
 
     @Autowired
     private Sonia sonia;
@@ -54,21 +54,21 @@ public class ScheduledUpdatorService implements ScheduledUpdator {
 
     private void update(boolean isInitial) {
         try {
-            Set<VideoGame> videoGames = new HashSet<>(videoGamesPull.getAllGames());
-            videoGames = extractNewGames(videoGames);
-            if (!videoGames.isEmpty()) {
+            Set<Item> items = new HashSet<>(itemsPull.getAllGames());
+            items = extractNewItems(items);
+            if (!items.isEmpty()) {
                 if (!isInitial) {
-                    updateBot(videoGames);
+                    updateBot(items);
                 }
-                videoGamesRepository.saveAll(videoGames);
+                itemsRepository.saveAll(items);
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    private void updateBot(Set<VideoGame> videoGames) {
-        videoGames.forEach(game -> {
+    private void updateBot(Set<Item> items) {
+        items.forEach(game -> {
             SendMessage message = new SendMessage()
                 .setChatId(chatId)
                 .setText(Convertor.gameToText(game));
@@ -83,14 +83,14 @@ public class ScheduledUpdatorService implements ScheduledUpdator {
 
 
 
-    private Set<VideoGame> extractNewGames(Set<VideoGame> videoGames) {
-        Set<VideoGame> videoGamesFromBase = new HashSet<>();
-        videoGamesRepository.findAll().forEach(videoGamesFromBase::add);
-        videoGames.removeIf(game -> videoGamesFromBase.stream()
+    private Set<Item> extractNewItems(Set<Item> items) {
+        Set<Item> videoGamesFromBase = new HashSet<>();
+        itemsRepository.findAll().forEach(videoGamesFromBase::add);
+        items.removeIf(game -> videoGamesFromBase.stream()
             .anyMatch(bgame -> ObjectUtils.nullSafeEquals(bgame.getName(), game.getName())
                                && ObjectUtils.nullSafeEquals(bgame.getPrice(), game.getPrice())));
-        LOGGER.info("updating with {} games ", videoGames.size());
-        return videoGames;
+        LOGGER.info("updating with {} items ", items.size());
+        return items;
     }
 
 

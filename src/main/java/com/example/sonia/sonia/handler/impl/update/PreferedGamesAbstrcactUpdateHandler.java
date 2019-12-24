@@ -22,14 +22,14 @@ public class PreferedGamesAbstrcactUpdateHandler implements UpdateHandler {
 
     private final static int ROWS = 3;
 
-    @Value("#{'${app.games}'.split(',')}")
+    @Value("#{'${app.items}'.split(',')}")
     private List<String> games;
 
     @Override
     public void handle(Update update, DefaultAbsSender sender) {
         SendMessage message = new SendMessage() // Create a message object object
             .setChatId(update.getMessage().getChatId())
-            .setText("Games:");
+            .setText("Items:");
         InlineKeyboardMarkup markupInline = new InlineKeyboardMarkup();
         List<InlineKeyboardButton> rowInline = new ArrayList<>();
         games.forEach(game -> {
@@ -47,6 +47,6 @@ public class PreferedGamesAbstrcactUpdateHandler implements UpdateHandler {
 
     @Override
     public Set<String> getApplicWords() {
-        return ImmutableSet.of("соня", "список", "ігор");
+        return ImmutableSet.of("соня", "список");
     }
 }

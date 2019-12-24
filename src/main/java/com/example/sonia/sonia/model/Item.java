@@ -9,8 +9,8 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "game")
-public class VideoGame {
+@Table(name = "item")
+public class Item {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -76,10 +76,10 @@ public class VideoGame {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        VideoGame videoGame = (VideoGame) o;
-        return Objects.equals(name, videoGame.name) &&
-               Objects.equals(price, videoGame.price) &&
-               Objects.equals(img, videoGame.img);
+        Item item = (Item) o;
+        return Objects.equals(name, item.name) &&
+               Objects.equals(price, item.price) &&
+               Objects.equals(img, item.img);
     }
 
     @Override
@@ -90,7 +90,7 @@ public class VideoGame {
 
     @Override
     public String toString() {
-        return "VideoGame{" +
+        return "Item{" +
                "id=" + id +
                ", name='" + name + '\'' +
                ", price=" + price +

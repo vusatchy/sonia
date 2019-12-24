@@ -9,5 +9,4 @@ public interface UpdateHandler extends Handler {
         return Tokenizer.tokenize(update.getMessage().getText()).containsAll(getApplicWords());
     }
 
-
 }

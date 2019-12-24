@@ -1,8 +1,8 @@
 package com.example.sonia.sonia.handler.impl.callback;
 
 import com.example.sonia.sonia.handler.CallbackQueryHandler;
-import com.example.sonia.sonia.model.VideoGame;
-import com.example.sonia.sonia.repository.VideoGamesRepository;
+import com.example.sonia.sonia.model.Item;
+import com.example.sonia.sonia.repository.ItemsRepository;
 import com.example.sonia.sonia.util.Convertor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,23 +18,23 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
-public class GameCallbackQuerHandler implements CallbackQueryHandler {
+public class ItemCallbackQuerHandler implements CallbackQueryHandler {
 
 
-    @Value("#{'${app.games}'.split(',')}")
-    private List<String> games;
+    @Value("#{'${app.items}'.split(',')}")
+    private List<String> items;
 
     @Autowired
-    private VideoGamesRepository videoGamesRepository;
+    private ItemsRepository itemsRepository;
 
     private final static String NO_RESULTS_MESSAGE = "No results";
 
     @Override
     public void handle(Update update, DefaultAbsSender sender) {
-        List<VideoGame> games = videoGamesRepository
+        List<Item> items = itemsRepository
             .findByNameContainingIgnoreCaseOrderByPriceDesc(update.getCallbackQuery().getData());
 
-        List<String> messages = games.stream().map(Convertor::gameToText).collect(Collectors.toList());
+        List<String> messages = items.stream().map(Convertor::gameToText).collect(Collectors.toList());
 
         if(messages.isEmpty()){
             SendMessage sendMessage = new SendMessage()
@@ -51,7 +51,6 @@ public class GameCallbackQuerHandler implements CallbackQueryHandler {
                 SendMessage sendMessage = new SendMessage()
                     .setChatId(update.getCallbackQuery().getMessage().getChatId())
                     .setText(message);
-
                 try {
                     sender.execute(sendMessage);
                 } catch (TelegramApiException e) {
@@ -63,6 +62,6 @@ public class GameCallbackQuerHandler implements CallbackQueryHandler {
 
     @Override
     public Set<String> getApplicWords() {
-        return new HashSet<>(games);
+        return new HashSet<>(items);
     }
 }

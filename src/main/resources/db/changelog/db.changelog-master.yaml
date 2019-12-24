@@ -7,7 +7,7 @@ databaseChangeLog:
         author: vusatchy
         changes:
             - createTable:
-                tableName: game
+                tableName: item
                 columns:
                     - column:
                         name: id

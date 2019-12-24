@@ -1,10 +1,10 @@
 package com.example.sonia.sonia.util;
 
-import com.example.sonia.sonia.model.VideoGame;
+import com.example.sonia.sonia.model.Item;
 
 public class Convertor {
 
-    public static String gameToText(VideoGame game) {
+    public static String gameToText(Item game) {
         StringBuilder stringBuilder = new StringBuilder()
             .append("Name: ")
             .append(game.getName())
