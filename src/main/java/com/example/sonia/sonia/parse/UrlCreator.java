@@ -1,7 +1,11 @@
 package com.example.sonia.sonia.parse;
 
+import com.example.sonia.sonia.service.impl.ScheduledUpdatorService;
+import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.regex.Pattern;
@@ -9,6 +13,8 @@ import java.util.regex.Pattern;
 import static java.lang.String.format;
 
 public class UrlCreator {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(ScheduledUpdatorService.class);
 
     private static final String URL = "https://www.olx.ua/uk/";
     private static final String Q_FORMAT = "/q-%s/";
@@ -19,10 +25,12 @@ public class UrlCreator {
         return URL + city + format(Q_FORMAT, q) + PAGE + page;
     }
 
-    public static boolean isValid(String url, String q) throws IOException {
+    public static boolean isValid(String url, String q) {
         String nextUrl;
         try {
-            nextUrl = Jsoup.connect(url).get().location();
+            Connection document = Jsoup.connect(url);
+            LOGGER.info("URL : {} with code {} ", document.get().html());
+            nextUrl = document.get().location();
         } catch (Exception e) {
             return false;
         }
